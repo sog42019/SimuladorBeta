@@ -1,5 +1,6 @@
 package simulador.de.procesos;
 
+import Vistas.Interfaz;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

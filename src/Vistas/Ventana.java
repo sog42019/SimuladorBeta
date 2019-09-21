@@ -1,4 +1,4 @@
-package simulador.de.procesos;
+package Vistas;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,6 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import simulador.de.procesos.Particion;
+import simulador.de.procesos.Proceso;
+import simulador.de.procesos.Recurso;
 
 
 public class Ventana extends javax.swing.JFrame {
@@ -80,21 +83,21 @@ public class Ventana extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jComboBoxCantCPU = new javax.swing.JComboBox<>();
+        jComboBoxCantCPU = new javax.swing.JComboBox<String>();
         jPanel7 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jComboBoxGesMemVar = new javax.swing.JComboBox<>();
+        jComboBoxGesMemVar = new javax.swing.JComboBox<String>();
         jLabel9 = new javax.swing.JLabel();
-        jComboBoxTipoPart = new javax.swing.JComboBox<>();
+        jComboBoxTipoPart = new javax.swing.JComboBox<String>();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jComboBoxNroPart = new javax.swing.JComboBox<>();
-        jComboBoxPlan = new javax.swing.JComboBox<>();
+        jComboBoxNroPart = new javax.swing.JComboBox<String>();
+        jComboBoxPlan = new javax.swing.JComboBox<String>();
         jLabel8 = new javax.swing.JLabel();
         Quantum = new javax.swing.JTextField();
-        jComboBoxGesmemFija = new javax.swing.JComboBox<>();
+        jComboBoxGesmemFija = new javax.swing.JComboBox<String>();
         jComboBoxGesmemFija.setVisible(false);
         jTextFieldTamMV = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -169,7 +172,6 @@ public class Ventana extends javax.swing.JFrame {
         setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
         setLocation(new java.awt.Point(500, 100));
         setMinimumSize(new java.awt.Dimension(800, 700));
-        setPreferredSize(new java.awt.Dimension(700, 600));
         setResizable(false);
         setSize(new java.awt.Dimension(700, 600));
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -184,7 +186,7 @@ public class Ventana extends javax.swing.JFrame {
 
         BtnRegistrar.setBackground(new java.awt.Color(51, 153, 255));
         BtnRegistrar.setForeground(new java.awt.Color(255, 255, 255));
-        BtnRegistrar.setText("Añadir\n");
+        BtnRegistrar.setText("Añadir ");
         BtnRegistrar.setToolTipText("");
         BtnRegistrar.setBorderPainted(false);
         BtnRegistrar.setFocusPainted(false);
@@ -362,15 +364,12 @@ public class Ventana extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -408,7 +407,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Cantidad ráfagas CPU");
 
-        jComboBoxCantCPU.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3" }));
+        jComboBoxCantCPU.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3" }));
         jComboBoxCantCPU.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxCantCPUItemStateChanged(evt);
@@ -494,7 +493,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel7.setText("Algoritmo planificación de proceso");
         jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 4, 200, -1));
 
-        jComboBoxGesMemVar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "First-Fit", "Worst-Fit" }));
+        jComboBoxGesMemVar.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "First-Fit", "Worst-Fit" }));
         jComboBoxGesMemVar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxGesMemVarActionPerformed(evt);
@@ -508,7 +507,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel9.setText("Tipo de partición");
         jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 190, -1));
 
-        jComboBoxTipoPart.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Variable", "Fija" }));
+        jComboBoxTipoPart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Variable", "Fija" }));
         jComboBoxTipoPart.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxTipoPartItemStateChanged(evt);
@@ -535,7 +534,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel11.setText("Numero de particiones");
         jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 190, -1));
 
-        jComboBoxNroPart.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5", "6", "7", "8" }));
+        jComboBoxNroPart.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "4", "5", "6", "7", "8" }));
         jComboBoxNroPart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxNroPartActionPerformed(evt);
@@ -543,7 +542,7 @@ public class Ventana extends javax.swing.JFrame {
         });
         jPanel3.add(jComboBoxNroPart, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 190, -1));
 
-        jComboBoxPlan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FCFS", "Round Robin", "SJF", "SRTF" }));
+        jComboBoxPlan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FCFS", "Round Robin", "SJF", "SRTF" }));
         jComboBoxPlan.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxPlanItemStateChanged(evt);
@@ -578,7 +577,7 @@ public class Ventana extends javax.swing.JFrame {
         });
         jPanel3.add(Quantum, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 73, 190, 18));
 
-        jComboBoxGesmemFija.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "First-Fit", "Best-Fit" }));
+        jComboBoxGesmemFija.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "First-Fit", "Best-Fit" }));
         jComboBoxGesmemFija.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxGesmemFijaActionPerformed(evt);
@@ -895,7 +894,7 @@ public class Ventana extends javax.swing.JFrame {
     private void jButtonEjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutarActionPerformed
        int tama;
        div = lista.size();
-       procesosVivos = lista.size(); //Guarda la cantidad de procesos que ingresó el user, se irá decrementando a medida que cada proceso finalice
+       procesosVivos = lista.size(); //Guarda la cantidad de procesos que ingresó el usuario, se irá decrementando a medida que cada proceso finalice
        cantPart = jComboBoxNroPart.getSelectedIndex() + 2;
        
        for (Proceso lista1 : lista) {  //Recorre la lista para saber cual es
@@ -1696,7 +1695,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBoxGesMemVar;
     private javax.swing.JComboBox<String> jComboBoxGesmemFija;
     private javax.swing.JComboBox<String> jComboBoxNroPart;
-    private javax.swing.JComboBox<String> jComboBoxPlan;
+    public javax.swing.JComboBox<String> jComboBoxPlan;
     public javax.swing.JComboBox<String> jComboBoxTipoPart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

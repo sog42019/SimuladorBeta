@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulador.de.procesos;
+package Vistas;
 
-import simulador.de.procesos.Ventana;
+import Vistas.Ventana;
 
 /**
  *

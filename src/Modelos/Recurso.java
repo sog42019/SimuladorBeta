@@ -4,14 +4,14 @@ package simulador.de.procesos;
 public class Recurso {
 
    //Atributos
-    int PID;
-    int TA;
-    int Tam;
-    int CPU1;
-    int ES1;
-    int CPU2;
-    int ES2;
-    boolean libre;
+    public int PID;
+    public int TA;
+    public int Tam;
+    public int CPU1;
+    public int ES1;
+    public int CPU2;
+    public int ES2;
+    public boolean libre;
 
     public int getES1() {
         return ES1;
@@ -36,7 +36,7 @@ public class Recurso {
     public void setCPU3(int CPU3) {
         this.CPU3 = CPU3;
     }
-    int CPU3; 
+    public int CPU3; 
 
     public Recurso(int PID, int TA, int Tam, int CPU1, int ES1, int CPU2, int ES2, int CPU3,boolean libre) {
         this.PID = PID;

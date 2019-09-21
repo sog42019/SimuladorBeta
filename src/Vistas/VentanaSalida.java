@@ -1,4 +1,4 @@
-package simulador.de.procesos;
+package Vistas;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import simulador.de.procesos.Particion;
 
 public class VentanaSalida extends JFrame {
     JScrollPane scrollPane, scrollPane2, scrollPanePrincipal;

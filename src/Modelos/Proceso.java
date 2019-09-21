@@ -3,19 +3,19 @@ package simulador.de.procesos;
 
 public class Proceso implements Comparable<Proceso>{
     //Atributos
-    int PID;
-    int TA;
-    int Tam;
-    int CPU1;
-    int ES1;
-    int CPU2;
-    int ES2;
-    int CPU3;
-    int TI;
-    int TF;
+    public int PID;
+    public int TA;
+    public int Tam;
+    public int CPU1;
+    public int ES1;
+    public int CPU2;
+    public int ES2;
+    public int CPU3;
+    public int TI;
+    public int TF;
 
     
-    Proceso (int PID, int TA, int Tam, int CPU1, int ES1, int CPU2, int ES2, int CPU3){
+    public Proceso (int PID, int TA, int Tam, int CPU1, int ES1, int CPU2, int ES2, int CPU3){
         this.PID = PID;
         this.TA = TA;
         this.Tam = Tam;

@@ -1,10 +1,10 @@
 package simulador.de.procesos;
 
 public class Particion {
-   int NroPart;
-   int ProCargado;
-   int TamPart;
-   boolean libre;
+   public int NroPart;
+   public int ProCargado;
+   public int TamPart;
+   public boolean libre;
 
     public Particion(int NroPart, int ProCargado, int TamPart, boolean libre) {
         this.NroPart = NroPart;
