@@ -1,4 +1,4 @@
-package simulador.de.procesos;
+package Modelos;
 
 public class Particion {
    public int NroPart;

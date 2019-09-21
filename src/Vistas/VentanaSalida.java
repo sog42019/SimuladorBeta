@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import simulador.de.procesos.Particion;
+import Modelos.Particion;
 
 public class VentanaSalida extends JFrame {
     JScrollPane scrollPane, scrollPane2, scrollPanePrincipal;

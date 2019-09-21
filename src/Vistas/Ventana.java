@@ -11,9 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import simulador.de.procesos.Particion;
-import simulador.de.procesos.Proceso;
-import simulador.de.procesos.Recurso;
+import Modelos.Particion;
+import Modelos.Proceso;
+import Modelos.Recurso;
 
 
 public class Ventana extends javax.swing.JFrame {
