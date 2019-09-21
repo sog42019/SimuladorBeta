@@ -4,7 +4,7 @@ public class Conexion {
    private static Connection cnx = null;
    public static Connection obtener() throws SQLException, ClassNotFoundException {
       if (cnx == null) {
-             String url = "jdbc:mysql://localhost:3306/";
+             String url = "jdbc:mysql://localhost:3306/simulador";
              String user = "root";
              String pass = "";
              System.out.println("Conectando…");

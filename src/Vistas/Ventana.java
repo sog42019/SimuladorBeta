@@ -14,6 +14,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import Modelos.Particion;
 import Modelos.Proceso;
 import Modelos.Recurso;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import servicios.Conexion;
 
 
 public class Ventana extends javax.swing.JFrame {
@@ -21,6 +30,11 @@ public class Ventana extends javax.swing.JFrame {
     //La clase Ventana es la que contiene toda la interfaz gráfica
     
     //Variables globales
+    Connection con = null;
+    Statement stmt = null;
+    String titulos[] = {"nombre", "fecha"};
+    String fila[] = new String[3];
+    DefaultTableModel modelo;
     int PID = 0;
     int quantum;
     int tamMemFija = 0;
@@ -44,6 +58,7 @@ public class Ventana extends javax.swing.JFrame {
     ArrayList<Proceso> colaBloqueado1 = new ArrayList<Proceso>();    //Lista que contiene los procesos que esperan por ES
     ArrayList<Proceso> colaBloqueado2 = new ArrayList<Proceso>();    //Lista que contiene los procesos que esperan por ES
     VentanaSalida ventanaSalida;
+    Conexion conexion;
     
     public Ventana() {
         initComponents();
@@ -110,11 +125,12 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextField1 = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablaEj = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProceso = new javax.swing.JTable();
+        jButtonEjecutar1 = new javax.swing.JButton();
         jButtonEjecutar = new javax.swing.JButton();
         jLabel17 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -301,7 +317,7 @@ public class Ventana extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTA, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(txtTA, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                     .addComponent(txtTam)
                     .addComponent(txtCPU1)
                     .addComponent(txtES)
@@ -450,11 +466,12 @@ public class Ventana extends javax.swing.JFrame {
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(10, 10, 10)
-                                        .addComponent(jComboBoxCantCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(BtnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jComboBoxCantCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(BtnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
@@ -467,7 +484,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(147, 147, 147)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(104, Short.MAX_VALUE)))
+                    .addContainerGap(148, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,9 +497,9 @@ public class Ventana extends javax.swing.JFrame {
                 .addComponent(jComboBoxCantCPU, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(29, 29, 29)
                 .addComponent(BtnRegistrar)
-                .addGap(140, 140, 140)
+                .addGap(117, 117, 117)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
@@ -659,7 +676,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel20.setForeground(new java.awt.Color(153, 0, 0));
         jLabel20.setText("Cargar Ejercicio");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEj.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -678,9 +695,19 @@ public class Ventana extends javax.swing.JFrame {
                 "Nombre", "Fecha"
             }
         ));
-        jScrollPane4.setViewportView(jTable2);
+        tablaEj.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaEjMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tablaEj);
 
         jButton2.setText("Buscar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -788,6 +815,19 @@ public class Ventana extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 800, 190));
 
+        jButtonEjecutar1.setBackground(new java.awt.Color(0, 204, 102));
+        jButtonEjecutar1.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonEjecutar1.setMnemonic('e');
+        jButtonEjecutar1.setText(" Ejecutar y Guardar");
+        jButtonEjecutar1.setToolTipText("");
+        jButtonEjecutar1.setFocusPainted(false);
+        jButtonEjecutar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEjecutar1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButtonEjecutar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 600, 260, 30));
+
         jButtonEjecutar.setBackground(new java.awt.Color(0, 204, 102));
         jButtonEjecutar.setForeground(new java.awt.Color(255, 255, 255));
         jButtonEjecutar.setMnemonic('e');
@@ -799,7 +839,7 @@ public class Ventana extends javax.swing.JFrame {
                 jButtonEjecutarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 600, 260, 30));
+        getContentPane().add(jButtonEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 600, 260, 30));
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Fondo-de-pantalla-Sistemas-Operativos-16.jpg"))); // NOI18N
         getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 860, 800));
@@ -913,7 +953,7 @@ public class Ventana extends javax.swing.JFrame {
                 Integer.parseInt(txtCPU1.getText()), Integer.parseInt(txtES.getText()),
                 Integer.parseInt(txtCPU2.getText()),0,0);      //Carga los datos ingresados al obejto "proceso"
             } else
-            if (jComboBoxCantCPU.getSelectedIndex()==2){    //Carga los procesos con 2 rafagas de CPU
+            if (jComboBoxCantCPU.getSelectedIndex()==2){    //Carga los procesos con 3 rafagas de CPU
                 proceso = new Proceso(PID, Integer.parseInt(txtTA.getText()),Integer.parseInt(txtTam.getText()),
                 Integer.parseInt(txtCPU1.getText()), Integer.parseInt(txtES.getText()),
                 Integer.parseInt(txtCPU2.getText()),Integer.parseInt(txtES2.getText()),Integer.parseInt(txtCPU3.getText()));      //Carga los datos ingresados al obejto "proceso"
@@ -1806,6 +1846,82 @@ public class Ventana extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         try {
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/simulador", "root", "");
+            if (con != null) {
+                System.out.println("Se ha establecido una conexion a la base de datos" + "\n" + "jdbc:mysql://localhost:3306/simulador");
+            }
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select* from ejercicio");
+
+            modelo = new DefaultTableModel();
+            modelo.addColumn("idejercicio");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Fecha");
+         
+
+            tablaEj.setModel(modelo);
+            while (rs.next()) {
+
+                fila[0] = rs.getString("idejercicio");
+                fila[1] = rs.getString("nombre");
+                fila[2] = rs.getString("fecha");
+               // fila[3] = rs.getString("cantidad");
+
+                modelo.addRow(fila);
+            }
+            tablaEj.setModel(modelo);
+            //JOptionPane.showMessageDialog(null, "se extrajo correctamente");
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, "Error al extraer los datos de la tabla");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void tablaEjMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaEjMouseClicked
+        try {
+            int seleccion= tablaEj.rowAtPoint(evt.getPoint());
+            String idd;
+            idd=String.valueOf(tablaEj.getValueAt(seleccion,0));
+            int id =Integer.parseInt(idd);
+           // JOptionPane.showMessageDialog(null, "Seleccione un ejercicio "+idd);
+            conexion.obtener();
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select* from proceso where ejercicioId='" +id + "' ");
+            
+            while (rs.next()) {
+
+          // fila[0] = rs.getString("idejercicio");
+             
+            proceso = new Proceso(Integer.parseInt(rs.getString("PID")), Integer.parseInt(rs.getString("TA")),Integer.parseInt(rs.getString("Tam")),
+            Integer.parseInt(rs.getString("CPU1")), Integer.parseInt(rs.getString("ES1")),
+            Integer.parseInt(rs.getString("CPU2")),Integer.parseInt(rs.getString("ES2")),Integer.parseInt(rs.getString("CPU3")));  
+            ta += proceso.TA;
+            ti += (proceso.CPU1+proceso.CPU2+proceso.CPU3);
+            lista.add(proceso);     //Agrega el objeto proceso a la lista
+            mostrar();  
+            }
+
+            //Llama a la función que muestra los datos en la tabla 
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+    }//GEN-LAST:event_tablaEjMouseClicked
+
+    private void jButtonEjecutar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutar1ActionPerformed
+       jButtonEjecutarActionPerformed(evt);
+    }//GEN-LAST:event_jButtonEjecutar1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnRegistrar;
@@ -1814,6 +1930,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonEjecutar;
+    private javax.swing.JButton jButtonEjecutar1;
     private javax.swing.JComboBox<String> jComboBoxCantCPU;
     private javax.swing.JComboBox<String> jComboBoxGesMemVar;
     private javax.swing.JComboBox<String> jComboBoxGesmemFija;
@@ -1859,11 +1976,11 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTableProceso;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextFieldTamMV;
+    private javax.swing.JTable tablaEj;
     private javax.swing.JTextField txtCPU1;
     private javax.swing.JTextField txtCPU2;
     private javax.swing.JTextField txtCPU3;
