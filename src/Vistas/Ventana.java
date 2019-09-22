@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import Modelos.Particion;
 import Modelos.Proceso;
 import Modelos.Recurso;
+import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import servicios.Conexion;
 
@@ -32,6 +34,7 @@ public class Ventana extends javax.swing.JFrame {
     //Variables globales
     Connection con = null;
     Statement stmt = null;
+     Statement stmt1 = null;
     String titulos[] = {"nombre", "fecha"};
     String fila[] = new String[3];
     DefaultTableModel modelo;
@@ -59,9 +62,14 @@ public class Ventana extends javax.swing.JFrame {
     ArrayList<Proceso> colaBloqueado2 = new ArrayList<Proceso>();    //Lista que contiene los procesos que esperan por ES
     VentanaSalida ventanaSalida;
     Conexion conexion;
-    
+    static String nombre_ejercicio;
+    static boolean bandera;
     public Ventana() {
         initComponents();
+         this.setLocationRelativeTo(null);
+         this.setMinimumSize(new Dimension(1050, 1000));
+        //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setTitle("Simulador");
         
     }
     
@@ -132,6 +140,8 @@ public class Ventana extends javax.swing.JFrame {
         jTableProceso = new javax.swing.JTable();
         jButtonEjecutar1 = new javax.swing.JButton();
         jButtonEjecutar = new javax.swing.JButton();
+        txt_nombre = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -192,15 +202,14 @@ public class Ventana extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SiPro");
+        setTitle("SimuladorSO");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new ImageIcon(getClass().getResource("/img/logo.png")).getImage());
         setLocation(new java.awt.Point(500, 100));
-        setMinimumSize(new java.awt.Dimension(800, 700));
-        setPreferredSize(new java.awt.Dimension(700, 600));
-        setResizable(false);
-        setSize(new java.awt.Dimension(700, 600));
+        setMinimumSize(new java.awt.Dimension(800, 900));
+        setPreferredSize(new java.awt.Dimension(800, 900));
+        setSize(new java.awt.Dimension(900, 800));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
@@ -508,7 +517,7 @@ public class Ventana extends javax.swing.JFrame {
                     .addContainerGap(424, Short.MAX_VALUE)))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 250, 380));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 250, 380));
 
         jPanel7.setBackground(new java.awt.Color(0, 0, 51));
         jPanel7.setForeground(new java.awt.Color(0, 0, 51));
@@ -521,17 +530,17 @@ public class Ventana extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+            .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel18)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 290, 40));
+        getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 0, 290, 40));
 
         jPanel3.setBackground(new java.awt.Color(0, 0, 51));
         jPanel3.setMinimumSize(new java.awt.Dimension(800, 700));
@@ -660,7 +669,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel19.setText("MEMORIA");
         jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 94, 180, 30));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, 290, 340));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 40, 290, 340));
 
         jPanel8.setBackground(new java.awt.Color(0, 0, 51));
         jPanel8.setForeground(new java.awt.Color(0, 0, 51));
@@ -676,31 +685,54 @@ public class Ventana extends javax.swing.JFrame {
         jLabel20.setForeground(new java.awt.Color(153, 0, 0));
         jLabel20.setText("Cargar Ejercicio");
 
+        tablaEj.setAutoCreateRowSorter(true);
         tablaEj.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Nombre", "Fecha"
+                "Id", "Nombre", "Fecha"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaEj.setColumnSelectionAllowed(true);
         tablaEj.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaEjMouseClicked(evt);
             }
         });
         jScrollPane4.setViewportView(tablaEj);
+        tablaEj.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (tablaEj.getColumnModel().getColumnCount() > 0) {
+            tablaEj.getColumnModel().getColumn(0).setResizable(false);
+            tablaEj.getColumnModel().getColumn(1).setResizable(false);
+            tablaEj.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         jButton2.setText("Buscar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -717,16 +749,16 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addGap(381, 381, 381)
+                        .addGap(316, 316, 316)
                         .addComponent(jButton1))
                     .addComponent(jLabel20))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(218, 218, 218)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(98, 98, 98)
                 .addComponent(jScrollPane2))
         );
         jPanel8Layout.setVerticalGroup(
@@ -749,7 +781,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap(50, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 0, 240, 380));
+        getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 0, 360, 380));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -802,18 +834,16 @@ public class Ventana extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 798, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 800, 190));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 380, 930, 140));
 
         jButtonEjecutar1.setBackground(new java.awt.Color(0, 204, 102));
         jButtonEjecutar1.setForeground(new java.awt.Color(255, 255, 255));
@@ -839,10 +869,23 @@ public class Ventana extends javax.swing.JFrame {
                 jButtonEjecutarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 600, 260, 30));
+        getContentPane().add(jButtonEjecutar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 530, 930, 30));
+
+        txt_nombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_nombreActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txt_nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 600, 270, 30));
+
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel21.setText("*SI QUIERE GUARGAR ESTA CARGA, ESCRIBA UN NOMBRE DE REFERENCIA Y PRESIONE EJECUTAR Y GUARDAR");
+        getContentPane().add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 570, -1, -1));
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Fondo-de-pantalla-Sistemas-Operativos-16.jpg"))); // NOI18N
-        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 860, 800));
+        jLabel17.setMaximumSize(new java.awt.Dimension(1024, 1024));
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 1100, 800));
 
         jMenuBar1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1847,8 +1890,9 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         try {
-
+         
+        try {
+    
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/simulador", "root", "");
             if (con != null) {
@@ -1858,22 +1902,28 @@ public class Ventana extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery("select* from ejercicio");
 
             modelo = new DefaultTableModel();
-            modelo.addColumn("idejercicio");
+           
+          
+           
             modelo.addColumn("Nombre");
             modelo.addColumn("Fecha");
-         
+            modelo.addColumn("id");
 
             tablaEj.setModel(modelo);
             while (rs.next()) {
 
-                fila[0] = rs.getString("idejercicio");
-                fila[1] = rs.getString("nombre");
-                fila[2] = rs.getString("fecha");
+                
+                fila[0] = rs.getString("nombre");
+                fila[1] = rs.getString("fecha");
+                fila[2] = rs.getString("idejercicio");
                // fila[3] = rs.getString("cantidad");
 
                 modelo.addRow(fila);
             }
+  
             tablaEj.setModel(modelo);
+            
+    
             //JOptionPane.showMessageDialog(null, "se extrajo correctamente");
         } catch (Exception e) {
 
@@ -1883,9 +1933,10 @@ public class Ventana extends javax.swing.JFrame {
 
     private void tablaEjMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaEjMouseClicked
         try {
+              lista.clear();
             int seleccion= tablaEj.rowAtPoint(evt.getPoint());
             String idd;
-            idd=String.valueOf(tablaEj.getValueAt(seleccion,0));
+            idd=String.valueOf(tablaEj.getValueAt(seleccion,2));
             int id =Integer.parseInt(idd);
            // JOptionPane.showMessageDialog(null, "Seleccione un ejercicio "+idd);
             conexion.obtener();
@@ -1918,9 +1969,97 @@ public class Ventana extends javax.swing.JFrame {
         
     }//GEN-LAST:event_tablaEjMouseClicked
 
+     public static void setBnadera(boolean bandera) {
+         Ventana.bandera=bandera;
+
+    }
+      public static void setNombre(String nombre) {
+         Ventana.nombre_ejercicio=nombre;
+
+    }
+     
+   public static void carga(){
+       
+   }
     private void jButtonEjecutar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEjecutar1ActionPerformed
-       jButtonEjecutarActionPerformed(evt);
+        nombre_ejercicio="";
+        int idejercicio=0;
+           if ((txt_nombre.getText()).equals("")){
+                 JOptionPane.showMessageDialog(null, "no ingreso ningun nombre ");
+                    
+             }else{
+            try {
+                try {
+                    Class.forName("com.mysql.jdbc.Driver").newInstance();
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    con = DriverManager.getConnection("jdbc:mysql://localhost:3306/simulador", "root", "");
+                     if (con != null) {
+                      System.out.println("Se ha establecido una conexion para cargar ejercicio" + "\n" + "jdbc:mysql://localhost:3306/simulador");
+                      }
+                java.util.Date fechaActual = new java.util.Date();
+                java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("dd/MMM/yyyy");
+                String dia = formato.format(fechaActual);
+                java.util.Date fechaActual2 = new java.util.Date();
+                java.text.SimpleDateFormat formato2 = new java.text.SimpleDateFormat("hh:mm:ss a");
+                String min = formato2.format(fechaActual2);
+                String fecha=dia+" "+min;
+                nombre_ejercicio=txt_nombre.getText();
+                stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select max(idejercicio) as id from ejercicio");
+                while (rs.next()) {
+                String s=rs.getString("id");
+                 idejercicio=Integer.parseInt(s) +1 ;
+                }
+                cargarEjercicio(idejercicio,nombre_ejercicio,fecha);
+                
+                JOptionPane.showMessageDialog(null, "recivi un nombre "+nombre_ejercicio+" "+dia+" "+min);
+                jButtonEjecutarActionPerformed(evt);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                 
+            }
+      
+       
+     
+         
     }//GEN-LAST:event_jButtonEjecutar1ActionPerformed
+    public void cargarEjercicio(int id,String nombre,String fecha){
+          try {
+
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/simulador", "root", "");
+            if (con != null) {
+                System.out.println("ahora si" + "\n" + "jdbc:mysql://localhost:3306/simulador");
+            }
+            stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO ejercicio VALUES('" + id + "','" + nombre + "','" + fecha+ "')");
+            //JOptionPane.showMessageDialog(null, "se extrajo correctamente");
+                    for (int i = 0; i < lista.size(); i++) {
+                       stmt = con.createStatement();
+                       stmt.executeUpdate("INSERT INTO proceso VALUES('" + 0 + "','" +  Integer.toString(lista.get(i).getPID())
+                               + "','" +Integer.toString(lista.get(i).getTA()) + "','" 
+                               + Integer.toString(lista.get(i).getTam()) + "','" + Integer.toString(lista.get(i).getCPU1()) 
+                               + "','" +  Integer.toString(lista.get(i).getES1()) + "','" 
+                               + Integer.toString(lista.get(i).getCPU2()) + "','" + Integer.toString(lista.get(i).getES2()) + "','" 
+                               + Integer.toString(lista.get(i).getCPU3()) + "','"  + id+ "')");  
+       
+            
+                            }
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, "Error al extraer los datos de la tabla");
+        }
+    }
+    private void txt_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_nombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_nombreActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1950,6 +2089,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1988,6 +2128,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JTextField txtES2;
     private javax.swing.JTextField txtTA;
     private javax.swing.JTextField txtTam;
+    private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 
     
