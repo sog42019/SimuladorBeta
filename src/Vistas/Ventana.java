@@ -28,8 +28,7 @@ import servicios.Conexion;
 
 
 public class Ventana extends javax.swing.JFrame {
-
-    //La clase Ventana es la que contiene toda la interfaz gráfica
+     //La clase Ventana es la que contiene toda la interfaz gráfica
     
     //Variables globales
     Connection con = null;
@@ -1275,8 +1274,8 @@ public class Ventana extends javax.swing.JFrame {
     }
     
     public void algoritmoRR(){
-        if (!CPU.isLibre()){
-                switch (jComboBoxCantCPU.getSelectedIndex()){
+        if (!CPU.isLibre()){ //pregunta si la CPU esta ocupada
+                switch (jComboBoxCantCPU.getSelectedIndex()){ 
                     case 0: CPU.CPU1--;break;
                     case 1: if (CPU.CPU1 == 0){
                                 CPU.CPU2--;
